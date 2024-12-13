@@ -19,17 +19,26 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
+    private void FixedUpdate()
+    {
         Vector3 direction = (target.transform.position - transform.position).normalized;
-        float distance = Vector3.Distance(transform.position, target.position);
+        float distance = Vector3.Distance(transform.position, target.transform.position);
         if (distance > stoppingDistance)
         {
             Vector3 movement = direction * speed;
-            rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z); // Maintain vertical velocity
+            rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z);
         }
         else
         {
-            rb.velocity = new Vector3(0, rb.velocity.y, 0); // Stop horizontal movement
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
 
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, speed * Time.fixedDeltaTime);
+        }
     }
 }

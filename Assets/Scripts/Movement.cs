@@ -18,6 +18,10 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
+    private void FixedUpdate()
+    {
         vertical = Input.GetAxis("Vertical");
         horizontal = Input.GetAxis("Horizontal");
         rb.AddForce(transform.forward * vertical * speed);
@@ -28,5 +32,6 @@ public class Movement : MonoBehaviour
         float rotato = Input.GetAxis("Rotate 2");
         transform.Rotate(0, -rotates * rotationSpeed * Time.deltaTime, 0);
         transform.Rotate(0, rotato * rotationSpeed * Time.deltaTime, 0);
+
     }
 }
