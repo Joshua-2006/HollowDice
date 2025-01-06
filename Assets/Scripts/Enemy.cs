@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private Movement target;
+    public Movement target;
     private Rigidbody rb;
     public float speed = 10f;
     public float stoppingDistance = 2f;
+    public float hp = 3;
+    public bool hit;
+    public float force = 1000;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,5 +43,39 @@ public class Enemy : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, speed * Time.fixedDeltaTime);
         }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Sword"))
+        {
+            StartCoroutine(Wait());
+            if(hit)
+            {
+                hp -= 1;
+                rb.AddForce(target.transform.forward * force, ForceMode.Impulse);
+            }
+        }
+        if(hp <=0)
+        {
+            Destroy(gameObject);
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            StartCoroutine(Wait());
+            if(hit)
+            {
+                target.hp -= 1;
+                rb.AddForce(target.transform.forward * force, ForceMode.Impulse);
+            }
+        }
+    }
+    IEnumerator Wait()
+    {
+        hit = true;
+        yield return new WaitForSeconds(0.01f);
+        hit = false;
     }
 }

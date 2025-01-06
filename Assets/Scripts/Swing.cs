@@ -9,7 +9,9 @@ public class Swing : MonoBehaviour
     public Rigidbody rb;
     private Movement target;
     public float speed = 5;
+    public BoxCollider bc;
     public bool swing;
+    private Enemy enemy;
     public float swingSpeed = 5f; // Speed of the swing
     public float swingAngle = 90f; // Maximum angle of the swing
     public KeyCode swingKey = KeyCode.Space; // Key to swing the sword
@@ -20,12 +22,15 @@ public class Swing : MonoBehaviour
     void Start()
     {
         target = FindObjectOfType<Movement>();
+        enemy = FindObjectOfType<Enemy>();
         swing = true;
+        bc.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        enemy = FindObjectOfType<Enemy>();
         target = FindObjectOfType<Movement>();
         Quaternion.LookRotation(target.transform.forward);
         transform.position = transforms.position;
@@ -34,6 +39,7 @@ public class Swing : MonoBehaviour
             {
                 isSwinging = true;
                 currentSwing = 0f;
+                bc.enabled = true;
             }
 
             // Perform the swing
@@ -49,6 +55,7 @@ public class Swing : MonoBehaviour
                 else
                 {
                     isSwinging = false; // End the swing
+                bc.enabled = false;
                     transform.localRotation = Quaternion.identity; // Reset rotation
                 }
             }

@@ -8,7 +8,10 @@ public class Movement : MonoBehaviour
     private float horizontal;
     public float speed;
     public float rotationSpeed;
-    private Rigidbody rb;
+    public Rigidbody rb;
+    [SerializeField] private GameObject enemy;
+    public float hp;
+    public bool hit;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +21,14 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        if(hit)
+        {
+            rb.AddForce(transform.forward * speed, ForceMode.Impulse);
+        }
     }
     private void FixedUpdate()
     {
@@ -34,4 +44,19 @@ public class Movement : MonoBehaviour
         transform.Rotate(0, rotato * rotationSpeed * Time.deltaTime, 0);
 
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            hit = true;
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            hit = false;
+        }
+    }
+
 }
